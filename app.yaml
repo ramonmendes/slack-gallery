@@ -1,0 +1,81 @@
+runtime: python27
+api_version: 1
+threadsafe: true
+service: default
+
+handlers:
+# api from cloud endpoints
+- url: /(.*\.css)
+  mime_type: text/css
+  static_files: stack/static/\1
+  upload: stack/static/(.*\.css)
+  secure: always
+
+- url: /(.*\.html)
+  mime_type: text/html
+  static_files: stack/static/\1
+  upload: stack/static/(.*\.html)
+  secure: always
+  http_headers:
+    X-Frame-Options: "SAMEORIGIN"
+    X-XSS-Protection: "1; mode=block"
+    X-Content-Type-Options: "nosniff"
+    Content-Security-Policy: "default-src 'self' https://www.googleapis.com https://securetoken.googleapis.com; object-src 'none'; script-src 'self' https://www.google-analytics.com/analytics.js https://apis.google.com/ http://apis.google.com; frame-src 'self' https://content.googleapis.com/ https://www.google.com https://www.youtube.com https://accounts.google.com https://apis.google.com https://plus.google.com https://googl-cit-gcp.firebaseapp.com; child-src 'self' https://www.google.com https://www.youtube.com https://accounts.google.com https://apis.google.com https://plus.google.com; style-src 'self' 'unsafe-inline' http://fonts.googleapis.com/icon http://fonts.googleapis.com https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://themes.googleusercontent.com https://fonts.gstatic.com https://fonts.googleapis.com http://fonts.gstatic.com; img-src 'self' data: https:;"
+    Strict-Transport-Security: "max-age=31536000; includeSubdomains"
+
+- url: /(.*\.js)
+  mime_type: text/javascript
+  static_files: stack/static/\1
+  secure: always
+  upload: stack/static/(.*\.js)
+
+- url: /(.*\.json)
+  mime_type: text/javascript
+  static_files: stack/\1
+  secure: always
+  upload: stack/(.*\.json)
+
+# image files
+- url: /(.*\.(bmp|gif|ico|jpeg|jpg|png|svg))
+  static_files: stack/static/\1
+  secure: always
+  upload: stack/static/(.*\.(bmp|gif|ico|jpeg|jpg|png|svg))
+
+# site root
+- url: /
+  mime_type: text/html
+  static_files: stack/static/index.html
+  upload: stack/static/index.html
+  secure: always
+  http_headers:
+    X-Frame-Options: "SAMEORIGIN"
+    X-XSS-Protection: "1; mode=block"
+    X-Content-Type-Options: "nosniff"
+    Content-Security-Policy: "default-src 'self' https://www.googleapis.com https://securetoken.googleapis.com; object-src 'none'; script-src 'self' https://www.google-analytics.com/analytics.js https://apis.google.com/ http://apis.google.com; frame-src 'self' https://content.googleapis.com/ https://www.google.com https://www.youtube.com https://accounts.google.com https://apis.google.com https://plus.google.com https://googl-cit-gcp.firebaseapp.com; child-src 'self' https://www.google.com https://www.youtube.com https://accounts.google.com https://apis.google.com https://plus.google.com; style-src 'self' 'unsafe-inline' http://fonts.googleapis.com/icon http://fonts.googleapis.com https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://themes.googleusercontent.com https://fonts.gstatic.com https://fonts.googleapis.com http://fonts.gstatic.com; img-src 'self' data: https:;"
+    Strict-Transport-Security: "max-age=31536000; includeSubdomains"
+
+- url: /.*
+  script: stack.app
+
+libraries:
+- name: webapp2
+  version: latest
+- name: jinja2
+  version: latest
+
+skip_files:
+- ^.git$
+- ^frontend$
+- ^(.*/)?.*\.py[co]$
+- README.md
+- .gitignore
+- .nvmrc
+- .python-version
+- pylama.ini
+- requirements.txt
+- report.txt
+- ^worker$
+- worker.yaml
+- queue.yaml
+- ^lib_tests$
+- ^tests$

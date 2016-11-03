@@ -1,0 +1,5 @@
+flask
+Flask-OAuth
+requests
+httplib2
+elasticsearch
